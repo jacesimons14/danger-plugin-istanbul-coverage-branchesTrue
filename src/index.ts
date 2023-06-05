@@ -9,6 +9,7 @@ import {
   SourcePath,
   SourcePathExplicit,
   SourceType,
+  floatChanged
 } from "./config.model"
 import {
   CoverageCollection,
@@ -214,6 +215,7 @@ export function istanbulCoverage(config?: Partial<Config>): Promise<void> {
     const allFiles = Object.keys(coverage).filter(filename => filename !== "total")
 
     const files = getFileSet(combinedConfig.reportFileSet, allFiles, modifiedFiles, createdFiles)
+    const floatChanged = combinedConfig.floatChanged;
 
     if (files.length === 0) {
       return

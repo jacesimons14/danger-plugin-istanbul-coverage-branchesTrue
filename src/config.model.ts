@@ -8,6 +8,7 @@ export type SortMethod =
   | "smallest-file-size"
   | "uncovered-lines"
 
+export type floatChanged = true | false
 export type SourceType = "json-summary" | "lcov"
 export interface SourcePathExplicit {
   path: string
@@ -32,6 +33,7 @@ export interface Config {
   reportFileSet: ReportFileSet
   threshold: CoverageThreshold
   reportMode: ReportMode
+  floatChanged: boolean
 }
 
 /**
@@ -46,6 +48,7 @@ export function makeCompleteConfiguration(config?: Partial<Config>): Config {
     reportMode: "message",
     entrySortMethod: "alphabetically",
     numberOfEntries: 10,
+    floatChanged: true,
     threshold: {
       statements: 100,
       branches: 100,

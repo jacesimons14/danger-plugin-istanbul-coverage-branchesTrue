@@ -163,32 +163,32 @@ describe("sortFiles", () => {
     },
   }
   it("sorts files by their line coverage percentage in descending order", () => {
-    const output = sortFiles(["file1", "file2", "file3"], coverage, "most-coverage")
+    const output = sortFiles(["file1", "file2", "file3"], coverage, "most-coverage", false)
     expect(output).toEqual(["file3", "file2", "file1"])
   })
   it("sorts files by their line coverage percentage in ascending order", () => {
-    const output = sortFiles(["file1", "file2", "file3"], coverage, "least-coverage")
+    const output = sortFiles(["file1", "file2", "file3"], coverage, "least-coverage", false)
     expect(output).toEqual(["file1", "file2", "file3"])
   })
   it("skips files not in input file list", () => {
-    const output = sortFiles(["file1", "file3"], coverage, "most-coverage")
+    const output = sortFiles(["file1", "file3"], coverage, "most-coverage", false)
     expect(output).toEqual(["file3", "file1"])
   })
   it("sorts files by the number of lines in descending order", () => {
-    const output = sortFiles(["file1", "file2", "file3"], coverage, "largest-file-size")
+    const output = sortFiles(["file1", "file2", "file3"], coverage, "largest-file-size", false)
     expect(output).toEqual(["file2", "file3", "file1"])
   })
   it("sorts files the number of lines in ascending order", () => {
-    const output = sortFiles(["file1", "file2", "file3"], coverage, "smallest-file-size")
+    const output = sortFiles(["file1", "file2", "file3"], coverage, "smallest-file-size", false)
     expect(output).toEqual(["file1", "file3", "file2"])
   })
   it("sorts files by the number of uncovered lines in descending order", () => {
-    const output = sortFiles(["file1", "file2", "file3"], coverage, "uncovered-lines")
+    const output = sortFiles(["file1", "file2", "file3"], coverage, "uncovered-lines", false)
     expect(output).toEqual(["file3", "file2", "file1"])
   })
 
   it("sorts files in alphabetical order", () => {
-    const output = sortFiles(["c", "b", "a"], coverage, "alphabetically")
+    const output = sortFiles(["c", "b", "a"], coverage, "alphabetically", false)
     expect(output).toEqual(["a", "b", "c"])
   })
 })

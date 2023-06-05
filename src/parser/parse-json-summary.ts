@@ -84,7 +84,6 @@ function parseJsonSummary(coveragePath) {
         return json;
     }
     else {
-        // the json is being parsed properly, but it's failing their custom isCoverageCollection method because of the new 'branchesTrue' key which is present in new json outputs
         throw Error(`Coverage data had invalid formatting at path '${coveragePath}'`);
     }
 }
