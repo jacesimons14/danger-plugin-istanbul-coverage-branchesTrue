@@ -1,7 +1,10 @@
 import { METHODS } from "http"
 import * as path from "path"
-import { Config, CoverageThreshold, SortMethod } from "./config.model"
+import { Config, CoverageThreshold, SortMethod, floatChanged } from "./config.model"
 import FilesystemService from "./filesystem.service"
+import { DangerDSLType } from "../node_modules/danger/distribution/dsl/DangerDSL"
+
+declare var danger: DangerDSLType
 
 export interface CoverageItem {
   total: number
@@ -84,9 +87,10 @@ function sortFilesAlphabetically(files: string[]): string[] {
  * @param files The files list
  * @param coverageCollection The collection of file coverages.
  * @param method The method to use while sorting
+ * @param FloatChanged bool to float explicity changed files to the top of the report
  * @returns The sorted list of file names.
  */
-export function sortFiles(files: string[], coverageCollection: CoverageCollection, method: SortMethod) {
+export function sortFiles(files: string[], coverageCollection: CoverageCollection, method: SortMethod, FloatChanged: floatChanged) {
   switch (method) {
     case "alphabetically":
       return sortFilesAlphabetically(files)
@@ -107,23 +111,32 @@ export function makeCoverageModel(
   numberOfEntries: number,
   files: string[],
   coverageCollection: CoverageCollection,
-  sortMethod: SortMethod = "alphabetically"
+  sortMethod: SortMethod = "alphabetically",
+  floatChanged: boolean = true
 ) {
-  const sortedFiles = sortFiles(files, coverageCollection, sortMethod)
+  const sortedFiles = sortFiles(files, coverageCollection, sortMethod, floatChanged)
 
-  const displayedFiles = sortedFiles.slice(0, Math.min(sortedFiles.length, numberOfEntries))
+  let sortedFloatedFiles = sortedFiles;
+  
+  if (floatChanged) {
+    const gitFiles = [...danger.git.modified_files, ...danger.git.created_files];
+    sortedFloatedFiles.unshift(...gitFiles)
+  }
+      
+  const displayedFiles = sortedFloatedFiles.slice(0, Math.min(sortedFiles.length, numberOfEntries))
   const displayedEntries = displayedFiles.map(file => coverageCollection[file])
   const ellidedEntries = sortedFiles.slice(numberOfEntries).map(file => coverageCollection[file])
-
+  
   const ellidedSummary = reduceEntries(ellidedEntries)
   const totalSummary = reduceEntries([...displayedEntries, ellidedSummary])
-
+  
   const coverageEntries = displayedFiles.reduce((current, file) => {
     const copy = { ...current }
     copy[file] = coverageCollection[file]
     return copy
   }, {})
-
+  
+  
   return {
     displayed: coverageEntries,
     total: totalSummary,
