@@ -20,7 +20,7 @@
     "coverage",
     "testing"
   ],
-  "version": "0.2.24",
+  "version": "0.3.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
